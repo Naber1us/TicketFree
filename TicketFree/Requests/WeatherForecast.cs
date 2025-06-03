@@ -1,4 +1,4 @@
-namespace TicketFree
+namespace TicketFree.Requests
 {
     public class WeatherForecast
     {

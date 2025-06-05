@@ -4,7 +4,8 @@ using Microsoft.Data.SqlClient;
 using Azure.Core;
 using TicketFree.Enums;
 using System.Data;
-using Microsoft.AspNetCore.Authorization;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore;
 
 namespace TicketFree.Controllers;
 

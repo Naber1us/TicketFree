@@ -9,7 +9,13 @@ namespace TicketFree.Controllers
     public class EventsController : ControllerBase
     {
         [HttpGet(Name = "Event")]
-        public IActionResult GetEvent([FromQuery] Guid? eventId, [FromQuery] string? eventName, [FromQuery] DateTime? eventStart, [FromQuery] DateTime? eventEnd, [FromQuery] Guid? organizatorId)
+        public IActionResult GetEvent(
+            [FromQuery] Guid? eventId, 
+            [FromQuery] string? eventName, 
+            [FromQuery] DateTime? eventStart, 
+            [FromQuery] DateTime? eventEnd, 
+            [FromQuery] Guid? organizatorId
+            )
         {
             string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
 

@@ -6,6 +6,7 @@ using TicketFree.Enums;
 using System.Data;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore;
+using TicketFree.DataBase;
 
 namespace TicketFree.Controllers;
 
@@ -14,95 +15,118 @@ namespace TicketFree.Controllers;
 public class UsersController : ControllerBase
 {
     [HttpGet(Name = "Users")]
-    public IActionResult GetUser([FromQuery] string? idUser)
+    public IActionResult GetUser(
+        [FromQuery] string? idUser = "0B8562DA-3C77-4351-8C13-4286FE512F52"
+        )
     {
-        string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"; // Строка подключения SQL
-        string query = "SELECT * FROM dbo.usersInfo WHERE userId = '" + idUser + "'";  // SQL-запрос
-        string result = string.Empty;
-        SqlConnection connection = new SqlConnection(connectionString);
-        connection.Open();
-        SqlCommand command = new SqlCommand(query, connection);
-        SqlDataReader reader = command.ExecuteReader();
-        while (reader.Read())
+        try
         {
-            var Id = reader["userId"];
-            var Name = reader["userName"];
-            var Role = string.Empty;
-            switch (reader["userRole"])
+            string c = dbCon.Select();
+            string query = $"SELECT * FROM dbo.usersInfo WHERE userId = '{idUser}'";
+            string result = string.Empty;
+            SqlConnection connection = new SqlConnection(c);
+            connection.Open();
+            SqlCommand command = new SqlCommand(query, connection);
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read())
             {
-                case "0":
+                var Id = reader["userId"];
+                var Name = reader["userName"];
+                var Role = string.Empty;
+                switch (reader["userRole"])
+                {
+                    case "0":
+                        {
+                            Role = "Admin";
+                            break;
+                        }
+                    case "1":
+                        {
+                            Role = "PlaceHolder";
+                            break;
+                        }
+                    case "2":
+                        {
+                            Role = "Organizator";
+                            break;
+                        }
+                    default:
+                        {
+                            Role = "Guest";
+                            break;
+                        }
+                }
+                var Token = reader["userToken"];
+                result += $"{{\n\t'userId': '{Id}',\n\t'userName':  '{Name}',\n\t'userRole': '{Role}',\n\t'userToken': '{Token}'    \n}}";
+            }
+
+            
+            return new OkObjectResult(result);
+        }
+        catch
+        {
+            return BadRequest();
+        }
+        
+    }
+
+    [HttpPost(Name ="Users")]
+    public IActionResult AddUser(
+        [FromQuery] string? requestRole, 
+        [FromQuery] string? userName
+        )
+    {
+        try
+        {
+            Guid userGuid = Guid.NewGuid();
+            ERoles userRole;
+            switch (requestRole)
+            {
+                case "Admin":
                     {
-                        Role = "Admin";
+                        userRole = ERoles.Admin;
                         break;
                     }
-                case "1":
+                case "PlaceHolder":
                     {
-                        Role = "PlaceHolder";
+                        userRole = ERoles.PlaceHolder;
                         break;
                     }
-                case "2":
+                case "Organizator":
                     {
-                        Role = "Organizator";
+                        userRole = ERoles.Organizator;
+                        break;
+                    }
+                case "Guest":
+                    {
+                        userRole = ERoles.Guest;
                         break;
                     }
                 default:
                     {
-                        Role = "Guest";
+                        userRole = ERoles.Guest;
                         break;
                     }
             }
-            var Token = reader["userToken"];
-            result += $"{{\n\t'userId': '{Id}',\n\t'userName':  '{Name}',\n\t'userRole': '{Role}',\n\t'userToken': '{Token}'    \n}}";
+            ;
+            Guid userToken = Guid.NewGuid();
+            string c = dbCon.Select();
+            string query = "INSERT INTO dbo.usersInfo VALUES ('" + userGuid + "', '" + userName + "', '" + userRole + "', '" + userToken + "')";
+            SqlConnection connection = new SqlConnection(c);
+            connection.Open();
+            SqlCommand command = new SqlCommand(query, connection);
+            SqlDataReader reader = command.ExecuteReader();
+            return Ok(new Users
+            {
+                userId = userGuid,
+                userName = userName,
+                userRole = userRole,
+                userToken = userToken
+            });
         }
-        return new OkObjectResult(result);
-    }
-
-    [HttpPost(Name ="Users")]
-    public IActionResult AddUser([FromQuery] string? requestRole, [FromQuery] string? userName)
-    {
-        Guid userGuid = Guid.NewGuid();
-        ERoles userRole;
-        switch (requestRole)
+        catch
         {
-            case "Admin":
-                {
-                    userRole = ERoles.Admin;
-                    break;
-                }
-            case "PlaceHolder":
-                {
-                    userRole = ERoles.PlaceHolder;
-                    break;
-                }
-            case "Organizator":
-                {
-                    userRole = ERoles.Organizator;
-                    break;
-                }
-            case "Guest":
-                {
-                    userRole = ERoles.Guest;
-                    break;
-                }
-            default:
-                {
-                    userRole = ERoles.Guest;
-                    break;
-                }
-        };
-        Guid userToken = Guid.NewGuid();
-        string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"; // Строка подключения SQL
-        string query = "INSERT INTO dbo.usersInfo VALUES ('"+ userGuid + "', '"+ userName + "', '"+ userRole + "', '"+ userToken + "')";  // SQL-запрос
-        SqlConnection connection = new SqlConnection(connectionString);
-        connection.Open();
-        SqlCommand command = new SqlCommand(query, connection);
-        SqlDataReader reader = command.ExecuteReader();
-        return Ok(new Users
-        {
-            userId = userGuid,
-            userName = userName,
-            userRole = userRole,
-            userToken = userToken
-        });
+            return BadRequest();
+        }
     }
 }

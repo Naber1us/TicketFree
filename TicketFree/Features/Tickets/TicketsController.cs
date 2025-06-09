@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
-using TicketFree.Requests;
 
-namespace TicketFree.Controllers
+namespace TicketFree.Features.Tickets
 {
     [ApiController]
     [Route("[controller]")]
@@ -20,9 +17,9 @@ namespace TicketFree.Controllers
             string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
             string query = $"SELECT * FROM dbo.ticketsInfo WHERE ticketId = '{ticketId}' OR userId = '{userId}'";
             string result = $"{{\n";
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new(connectionString);
             connection.Open();
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new(query, connection);
             SqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
@@ -33,8 +30,8 @@ namespace TicketFree.Controllers
                 var Description = reader["eventDescription"];
                 var Image = reader["eventImage"];
                 var Place = reader["placeId"];
-                var organizator = reader["organizatorId"];
-                result += $"\t{{\n\t\t'eventId': '{Id}',\n\t\t'eventName':  '{Name}',\n\t\t'eventStart': '{Start}',\n\t\t'eventEnd': '{End}',\n\t\t'eventDesription': '{Description}',\n\t\t'eventImage': '{Image}',\n\t\t'placeId': '{Place}',\n\t\t'organizatorId': '{Place}'\n\t}}";
+                var Organizator = reader["organizatorId"];
+                result += $"\t{{\n\t\t'eventId': '{Id}',\n\t\t'eventName':  '{Name}',\n\t\t'eventStart': '{Start}',\n\t\t'eventEnd': '{End}',\n\t\t'eventDesription': '{Description}',\n\t\t'eventImage': '{Image}',\n\t\t'placeId': '{Place}',\n\t\t'organizatorId': '{Organizator}'\n\t}}";
             }
             result += $"\n}}";
             return new OkObjectResult(result);
@@ -48,20 +45,20 @@ namespace TicketFree.Controllers
             )
         {
             Guid ticketId = Guid.NewGuid();
-            Guid ei = new Guid(eventId);
-            Guid ui = new Guid(userId);
+            Guid ei = new(eventId);
+            Guid ui = new(userId);
             string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
             string query = $"INSERT INTO dbo.ticketsInfo VALUES ('{ticketId}', '{ei}', '{ui}')";
             
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new(connectionString);
             connection.Open();
-            SqlCommand command = new SqlCommand(query, connection);
-            SqlDataReader reader = command.ExecuteReader();
+            SqlCommand command = new(query, connection);
+            _ = command.ExecuteReader();
             return Ok(new Tickets
             {
-                ticketId = ticketId,
-                eventId = ei,
-                userId = ui
+                TicketId = ticketId,
+                EventId = ei,
+                UserId = ui
             });
         }
     }

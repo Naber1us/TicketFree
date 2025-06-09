@@ -1,15 +1,17 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore;
-using System.Reflection;
+using TicketFree.Db;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddUserSecrets<Program>();
+
 builder.Services.AddControllers();
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen( o =>
+builder.Services.AddSwaggerGen(o =>
 {
     o.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -18,9 +20,9 @@ builder.Services.AddSwaggerGen( o =>
         In = ParameterLocation.Header,
         Scheme = "Bearer"
     });
-    o.AddSecurityRequirement(new OpenApiSecurityRequirement()
+    o.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        { 
+        {
             new OpenApiSecurityScheme
             {
                 Reference = new OpenApiReference

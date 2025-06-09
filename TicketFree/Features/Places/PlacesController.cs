@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using TicketFree.Enums;
-using TicketFree.Requests;
 
-namespace TicketFree.Controllers
+namespace TicketFree.Features.Places
 {
     [ApiController]
     [Route("[controller]")]
@@ -20,9 +17,9 @@ namespace TicketFree.Controllers
                 string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"; // Строка подключения SQL
                 string query = "SELECT * FROM dbo.placesInfo WHERE placesId = '" + idPlace + "'";  // SQL-запрос
                 string result = string.Empty;
-                SqlConnection connection = new SqlConnection(connectionString);
+                SqlConnection connection = new(connectionString);
                 connection.Open();
-                SqlCommand command = new SqlCommand(query, connection);
+                SqlCommand command = new(query, connection);
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
                 {
@@ -53,16 +50,16 @@ namespace TicketFree.Controllers
                 Guid placeGuid = Guid.NewGuid();
                 string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"; // Строка подключения SQL
                 string query = $"INSERT INTO dbo.placesInfo VALUES ('{placeGuid}','{placeCountMembers}', '{placeHolder}', '{placeName}')";  // SQL-запрос
-                SqlConnection connection = new SqlConnection(connectionString);
+                SqlConnection connection = new(connectionString);
                 connection.Open();
-                SqlCommand command = new SqlCommand(query, connection);
+                SqlCommand command = new(query, connection);
                 SqlDataReader reader = command.ExecuteReader();
                 return Ok(new Places
                 {
-                    placeId = placeGuid,
-                    placeCountMembers = placeCountMembers,
-                    placeHolder = new Guid(placeHolder),
-                    placeName = placeName
+                    PlaceId = placeGuid,
+                    PlaceCountMembers = placeCountMembers,
+                    PlaceHolder = new Guid(placeHolder),
+                    PlaceName = placeName
                 });
             }
             catch

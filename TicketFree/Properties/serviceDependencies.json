@@ -1,8 +1,17 @@
 {
   "dependencies": {
+    "secrets1": {
+      "type": "secrets",
+      "dynamicId": null
+    },
+    "sqlite1": {
+      "type": "sqlite",
+      "connectionId": "ConnectionStrings:DatabaseConnection1",
+      "dynamicId": null
+    },
     "mssql1": {
       "type": "mssql",
-      "connectionId": "ConnectionStrings:DatabaseConnection1",
+      "connectionId": "ConnectionStrings:DbConnection",
       "dynamicId": null
     }
   }

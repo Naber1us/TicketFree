@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using TicketFree.Requests;
 
-namespace TicketFree.Controllers
+namespace TicketFree.Features.Events
 {
     [ApiController]
     [Route("[controller]")]
@@ -29,11 +28,11 @@ namespace TicketFree.Controllers
                 subquery.Add($" (eventStart >= '{eventStart}' AND eventEnd <= '{eventEnd}') ");
             if (organizatorId != null)
                 subquery.Add($" organizatorId = '{organizatorId}'");
-            query += String.Join(" AND ", subquery.ToArray());
+            query += string.Join(" AND ", [..subquery]);
             string result = $"{{\n";
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new(connectionString);
             connection.Open();
-            SqlCommand command = new SqlCommand(query, connection);
+            SqlCommand command = new(query, connection);
             SqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
@@ -44,8 +43,8 @@ namespace TicketFree.Controllers
                 var Description = reader["eventDescription"];
                 var Image = reader["eventImage"];
                 var Place = reader["placeId"];
-                var organizator = reader["organizatorId"];
-                result += $"\t{{\n\t\t'eventId': '{Id}',\n\t\t'eventName':  '{Name}',\n\t\t'eventStart': '{Start}',\n\t\t'eventEnd': '{End}',\n\t\t'eventDesription': '{Description}',\n\t\t'eventImage': '{Image}',\n\t\t'placeId': '{Place}',\n\t\t'organizatorId': '{Place}'\n\t}}";
+                var Organizator = reader["organizatorId"];
+                result += $"\t{{\n\t\t'eventId': '{Id}',\n\t\t'eventName':  '{Name}',\n\t\t'eventStart': '{Start}',\n\t\t'eventEnd': '{End}',\n\t\t'eventDesription': '{Description}',\n\t\t'eventImage': '{Image}',\n\t\t'placeId': '{Place}',\n\t\t'organizatorId': '{Organizator}'\n\t}}";
             }
             result += $"\n}}";
             return new OkObjectResult(result);
@@ -65,28 +64,27 @@ namespace TicketFree.Controllers
             DateTime eds = DateTime.Parse(eventStart);
             DateTime ede = DateTime.Parse(eventEnd);
             Guid eventId = Guid.NewGuid();
-            Guid organizatorId = new Guid("c4fe727c-9ec9-4dd6-a3f0-edc193ed16b6");
-            Guid placeIdGuid = new Guid(placeId);
+            Guid organizatorId = new("c4fe727c-9ec9-4dd6-a3f0-edc193ed16b6");
+            Guid placeIdGuid = new(placeId);
             string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False";
             string query = "INSERT INTO dbo.eventsInfo VALUES ('" + eventId + "', '" + organizatorId + "', '" + eventCountTickets + "', '" + eds + "', '" + ede + "', '" + eventName + "', '" + eventDesription + "', '" + eventImage + "', '" + placeIdGuid + "')";
-            string result = string.Empty;
 
-            SqlConnection connection = new SqlConnection(connectionString);
+            SqlConnection connection = new(connectionString);
             connection.Open();
-            SqlCommand command = new SqlCommand(query, connection);
-            SqlDataReader reader = command.ExecuteReader();
+            SqlCommand command = new(query, connection);
+            _ = command.ExecuteReader();
             
             return Ok(new Events
             {
-                eventId = eventId,
-                eventName = eventName,
-                eventStart = eds,
-                eventEnd = ede,
-                eventDescription = eventDesription,
-                eventCountTickets = eventCountTickets,
-                eventImage = eventImage,
-                placeId = placeIdGuid,
-                organizatorId = organizatorId
+                EventId = eventId,
+                EventName = eventName,
+                EventStart = eds,
+                EventEnd = ede,
+                EventDescription = eventDesription,
+                EventCountTickets = eventCountTickets,
+                EventImage = eventImage,
+                PlaceId = placeIdGuid,
+                OrganizatorId = organizatorId
             });
         }
     }

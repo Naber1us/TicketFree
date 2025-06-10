@@ -1,24 +1,24 @@
 ﻿using MediatR;
-using TicketFree.Features.Interfaces;
+using TicketFree.Interfaces;
 
 namespace TicketFree.Features.Users.Create
 {
-    public class CreateUserCommandHandler(IApplicationDbContext dbContext) : IRequestHandler<CreateUserCommand, Guid>
+    public class CreateUserCommandHandler(IApplicationDbContext dbContext) : IRequestHandler<CreateUserCommand, User>
     {
-        public async Task<Guid> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<User> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             var user = new User
             {
-                Id = Guid.NewGuid(),
-                Name = request.Name,
-                Role = request.Role,
-                Token = Guid.NewGuid()
+                UserId = Guid.NewGuid(),
+                UserName = request.UserName,
+                UserRole = request.UserRole,
+                UserToken = Guid.NewGuid()
             };
 
-            dbContext.Users.Add(user);
+            dbContext.UsersInfo.Add(user);
             await dbContext.SaveChangesAsync(cancellationToken);
 
-            return user.Id;
+            return user;
 
         }
     }

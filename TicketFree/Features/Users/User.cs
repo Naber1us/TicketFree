@@ -1,14 +1,13 @@
 ﻿using TicketFree.Enums;
-using MediatR;
 
 namespace TicketFree.Features.Users
 {
     public class User
     {
-        public Guid Id { get; set; }
-        public string? Name { get; set; }
-        public ERoles Role { get; set; }
-        public Guid Token { get; set; }
+        public Guid UserId { get; set; }
+        public string? UserName { get; set; }
+        public ERoles UserRole { get; set; }
+        public Guid UserToken { get; set; }
 
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace TicketFree.Features.Places
 {
-    public class Places
+    public class Place
     {
         public Guid PlaceId { get; set; }
         public int PlaceCountMembers { get; set; }

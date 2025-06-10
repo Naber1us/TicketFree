@@ -1,5 +1,5 @@
-﻿using TicketFree.Features.Interfaces;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using TicketFree.Interfaces;
 
 
 namespace TicketFree.Db

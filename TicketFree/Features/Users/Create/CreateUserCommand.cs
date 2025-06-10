@@ -3,10 +3,10 @@ using TicketFree.Enums;
 
 namespace TicketFree.Features.Users.Create
 {
-    public class CreateUserCommand : IRequest<Guid>
+    public class CreateUserCommand : IRequest<User>
     {
-        public string Name { get; set; } = string.Empty;
-        public ERoles Role { get; set; } = ERoles.Guest;
+        public string UserName { get; set; } = string.Empty;
+        public ERoles UserRole { get; set; } = ERoles.Guest;
     }
 
 }

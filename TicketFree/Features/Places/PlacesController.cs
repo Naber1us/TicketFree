@@ -1,72 +1,36 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
+using MediatR;
+using TicketFree.Features.Places.Dto;
+using TicketFree.Features.Places.Create;
 
 namespace TicketFree.Features.Places
 {
     [ApiController]
     [Route("[controller]")]
-    public class PlacesController : ControllerBase
+    public class PlacesController(IMediator mediator) : ControllerBase
     {
-        [HttpGet(Name = "Places")]
-        public IActionResult GetPlaces(
-            [FromQuery] string? idPlace
-            )
+        private readonly IMediator _mediator = mediator;
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllPlaces()
         {
-            try
-            {
-                string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"; // Строка подключения SQL
-                string query = "SELECT * FROM dbo.placesInfo WHERE placesId = '" + idPlace + "'";  // SQL-запрос
-                string result = string.Empty;
-                SqlConnection connection = new(connectionString);
-                connection.Open();
-                SqlCommand command = new(query, connection);
-                SqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    var Id = reader["placeId"];
-                    var CountMembers = reader["placeCountMembers"];
-                    var Holder = reader["placeHolder"];
-                    var Name = reader["placeName"];
-                    result += $"{{\n\t'placeId': '{Id}',\n\t'placeName':  '{Name}',\n\t'placeHolder': '{Holder}',\n\t'placeCountMembers': '{CountMembers}'\n}}";
-                }
-                return new OkObjectResult(result);
-            }
-            catch
-            {
-                return BadRequest();
-            }
-            
+            var place = await _mediator.Send(new GetAllPlacesQuery());
+            return Ok(place);
+        }
+
+        // GET: places/{id}
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPlaceById(Guid id)
+        {
+            var place = await _mediator.Send(new GetPlaceByIdQuery(id));
+            return place != null ? Ok(place) : NotFound();
         }
 
         [HttpPost(Name = "Places")]
-        public IActionResult AddPlaces(
-            [FromQuery] string placeHolder, 
-            [FromQuery] int placeCountMembers, 
-            [FromQuery] string placeName
-            )
+        public async Task<ActionResult<Place>> CreateUser(CreatePlaceCommand command)
         {
-            try
-            {
-                Guid placeGuid = Guid.NewGuid();
-                string connectionString = "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=master;Integrated Security=True;Connect Timeout=30;Encrypt=False;Trust Server Certificate=False;Application Intent=ReadWrite;Multi Subnet Failover=False"; // Строка подключения SQL
-                string query = $"INSERT INTO dbo.placesInfo VALUES ('{placeGuid}','{placeCountMembers}', '{placeHolder}', '{placeName}')";  // SQL-запрос
-                SqlConnection connection = new(connectionString);
-                connection.Open();
-                SqlCommand command = new(query, connection);
-                SqlDataReader reader = command.ExecuteReader();
-                return Ok(new Places
-                {
-                    PlaceId = placeGuid,
-                    PlaceCountMembers = placeCountMembers,
-                    PlaceHolder = new Guid(placeHolder),
-                    PlaceName = placeName
-                });
-            }
-            catch
-            {
-                return BadRequest();
-            }
-           
+            var place = await _mediator.Send(command);
+            return Ok(place);
         }
     }
 }

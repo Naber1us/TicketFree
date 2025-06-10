@@ -1,6 +1,6 @@
 ﻿namespace TicketFree.Features.Tickets
 {
-    public class Tickets
+    public class Ticket
     {
         public Guid TicketId { get; set; }
         public Guid UserId { get; set; }

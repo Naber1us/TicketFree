@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using TicketFree.Validations;
 
 namespace TicketFree.Features.Events.Create
 {
-    public class CreateEventCommand : IRequest<Event>
+    public class CreateEventCommand : IRequest<Result<Event>>
     {
         public Guid OrganizatorId { get; set; } = Guid.Empty;
         public Guid PlaceId { get; set; } = Guid.Empty;

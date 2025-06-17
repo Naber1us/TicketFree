@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using TicketFree.Validations;
 
 namespace TicketFree.Features.Places.Create
 {
-    public class CreatePlaceCommand : IRequest<Place>
+    public class CreatePlaceCommand : IRequest<Result<Place>>
     {
         public Guid PlaceHolder { get; set; } = Guid.Empty;
         public int PlaceCountMembers { get; set; } = 0;

@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using TicketFree.Features.Places.Create;
 using TicketFree.Features.Places.Dto;
+using TicketFree.Features.Places.Create;
+using TicketFree.Validations;
 
 namespace TicketFree.Features.Places
 {
@@ -29,8 +31,13 @@ namespace TicketFree.Features.Places
         [HttpPost(Name = "Places")]
         public async Task<ActionResult<Place>> CreateUser(CreatePlaceCommand command)
         {
-            var place = await _mediator.Send(command);
-            return Ok(place);
+            var result = await _mediator.Send(command);
+
+            if (result.IsSuccess)
+                return Ok(result.Value);
+
+            return BadRequest(result.Error);
+
         }
     }
 }

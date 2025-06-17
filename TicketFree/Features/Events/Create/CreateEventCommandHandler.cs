@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using TicketFree.Features.Places;
 using TicketFree.Interfaces;
 using TicketFree.Validations;
 
@@ -12,6 +13,12 @@ namespace TicketFree.Features.Events.Create
         {
             try
             {
+                if (request.EventStart >= request.EventEnd)
+                {
+                    return Result<Event>.Failure(
+                        new Error("INVALID_DATES", "Дата начала должна быть раньше даты окончания"));
+                }
+
                 var place = await dbContext.PlacesInfo
                     .FirstOrDefaultAsync(p => p.PlaceId == request.PlaceId, cancellationToken);
 
@@ -21,13 +28,14 @@ namespace TicketFree.Features.Events.Create
                         new Error("NOT_FOUND", "Указанное место не найдено"));
                 }
 
-                if (place.PlaceCountMembers < request.EventCountTickets)
+                if ((place.PlaceCountMembers <= request.EventCountTickets))
                 {
                     return Result<Event>.Failure(
                         new Error("CAPACITY_EXCEEDED",
                             $"Количество билетов ({request.EventCountTickets}) " +
                             $"превышает вместимость помещения ({place.PlaceCountMembers})"));
                 }
+                
                 var organizerExists = await dbContext.UsersInfo
                     .AnyAsync(u => u.UserId == request.OrganizatorId, cancellationToken);
 
@@ -36,6 +44,7 @@ namespace TicketFree.Features.Events.Create
                     return Result<Event>.Failure(
                         new Error("NOT_FOUND", "Указанный организатор не найден"));
                 }
+                
 
                 var @event = new Event
                 {
@@ -60,7 +69,7 @@ namespace TicketFree.Features.Events.Create
             {
                 return sqlEx.Number switch
                 {
-                    547 => Result<Event>.Failure(
+                    547 => Result<Event>.Failure( // FK violation
                         new Error("RELATIONSHIP_ERROR",
                             "Ошибка связи: проверьте существование связанных сущностей")),
                     _ => Result<Event>.Failure(

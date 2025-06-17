@@ -3,6 +3,9 @@ using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using TicketFree.Db;
+using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -4,17 +4,16 @@ using TicketFree.Validations;
 
 namespace TicketFree.Features.Events.Update
 {
-    public class UpdateEventByIdCommand: IRequest<Result<Event>>
+    public class UpdateEventByIdCommand : IRequest<Result<Event>>
     {
-        public Guid OrganizatorId { get; set; } = Guid.Empty;
-        public Guid PlaceId { get; set; } = Guid.Empty;
-        public Guid EventImage { get; set; } = Guid.Empty;
-        public int EventCountTickets { get; set; } = 0;
-        public DateTime EventStart { get; set; } = DateTime.Now;
-        public DateTime EventEnd { get; set; } = DateTime.Now.AddDays(1);
-        public string EventName { get; set; } = string.Empty;
-        public string EventDescription { get; set; } = string.Empty;
-        public EStatus EventStatus { get; set; } = EStatus.Open;
-        public Guid EventId { get; set; } = Guid.Empty;
+        public Guid? OrganizatorId { get; set; } = null;
+        public Guid? PlaceId { get; set; } = null;
+        public Guid? EventImage { get; set; } = null;
+        public int? EventCountTickets { get; set; } = null;
+        public DateTime? EventStart { get; set; } = null;
+        public DateTime? EventEnd { get; set; } = null;
+        public string? EventName { get; set; } = null;
+        public string? EventDescription { get; set; } = null;
+        public EStatus? EventStatus { get; set; } = EStatus.Open;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using TicketFree.Enums;
+using TicketFree.Features.Events.Update;
 using TicketFree.Validations;
 
 namespace TicketFree.Features.Events.Dto
@@ -21,4 +22,5 @@ namespace TicketFree.Features.Events.Dto
     public record GetEventByIdQuery(Guid Id) : IRequest<EventDto?>;
     public record GetActivesEventsQuery : IRequest<List<EventDto>>;
     public record CloseEventByIdQuery(Guid Id) : IRequest<Result<EventDto>>;
+    public record UpdateEventByIdQuery(UpdateEventByIdCommand Body, Guid Id) : IRequest<Result<Event>>;
 }

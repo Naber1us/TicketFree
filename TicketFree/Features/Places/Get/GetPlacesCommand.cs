@@ -9,7 +9,7 @@ namespace TicketFree.Features.Places.Get
         public Guid PlaceHolder { get; } = Guid.Empty;
         public string PlaceName { get; } = string.Empty;
         public int PlaceCountMembers { get; } = 0;
-        
+
     }
 
 

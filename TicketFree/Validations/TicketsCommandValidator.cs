@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using TicketFree.Features.Events.Create;
 using TicketFree.Features.Tickets.Buy;
 
 namespace TicketFree.Validations

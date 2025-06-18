@@ -1,41 +1,33 @@
 ﻿using MediatR;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using TicketFree.Interfaces;
+using TicketFree.Validations;
 
 namespace TicketFree.Features.Events.Create
 {
-    public class CreateEventCommandHandler(IApplicationDbContext dbContext) : IRequestHandler<CreateEventCommand, Event>
+    public class CreateEventCommandHandler(IApplicationDbContext dbContext) : IRequestHandler<CreateEventCommand, Result<Event>>
     {
-        public async Task<Event> Handle(CreateEventCommand request, CancellationToken cancellationToken)
+        public async Task<Result<Event>> Handle(CreateEventCommand request, CancellationToken cancellationToken)
         {
-            var @event = new Event
+            try
             {
-                EventId = Guid.NewGuid(),
-                EventName = request.EventName,
-                EventDescription = request.EventDescription,
-                EventImage = request.EventImage,
-                EventStart = request.EventStart,
-                EventEnd = request.EventEnd,
-                PlaceId =   request.PlaceId,
-                EventCountTickets = request.EventCountTickets,
-                OrganizatorId = request.OrganizatorId,
-                EventStatus = request.EventStatus
-            };
+                var place = await dbContext.PlacesInfo
+                    .FirstOrDefaultAsync(p => p.PlaceId == request.PlaceId, cancellationToken);
 
-            dbContext.EventsInfo.Add(@event);
-            await dbContext.SaveChangesAsync(cancellationToken);
+                if (place == null)
+                {
+                    return Result<Event>.Failure(
+                        new Error("NOT_FOUND", "Указанное место не найдено"));
+                }
 
-            return @event;
-
-<<<<<<< Updated upstream
-=======
-                if ((place.PlaceCountMembers <= request.EventCountTickets))
+                if (place.PlaceCountMembers < request.EventCountTickets)
                 {
                     return Result<Event>.Failure(
                         new Error("CAPACITY_EXCEEDED",
                             $"Количество билетов ({request.EventCountTickets}) " +
                             $"превышает вместимость помещения ({place.PlaceCountMembers})"));
                 }
-                
                 var organizerExists = await dbContext.UsersInfo
                     .AnyAsync(u => u.UserId == request.OrganizatorId, cancellationToken);
 
@@ -44,7 +36,6 @@ namespace TicketFree.Features.Events.Create
                     return Result<Event>.Failure(
                         new Error("NOT_FOUND", "Указанный организатор не найден"));
                 }
-                
 
                 var @event = new Event
                 {
@@ -57,8 +48,7 @@ namespace TicketFree.Features.Events.Create
                     PlaceId = request.PlaceId,
                     EventCountTickets = request.EventCountTickets,
                     OrganizatorId = request.OrganizatorId,
-                    EventStatus = request.EventStatus,
-                    CurrentEventCountTickets = request.EventCountTickets
+                    EventStatus = request.EventStatus
                 };
 
                 dbContext.EventsInfo.Add(@event);
@@ -70,7 +60,7 @@ namespace TicketFree.Features.Events.Create
             {
                 return sqlEx.Number switch
                 {
-                    547 => Result<Event>.Failure( // FK violation
+                    547 => Result<Event>.Failure(
                         new Error("RELATIONSHIP_ERROR",
                             "Ошибка связи: проверьте существование связанных сущностей")),
                     _ => Result<Event>.Failure(
@@ -82,7 +72,6 @@ namespace TicketFree.Features.Events.Create
                 return Result<Event>.Failure(
                     new Error("UNEXPECTED_ERROR", $"Неожиданная ошибка: {ex.Message}"));
             }
->>>>>>> Stashed changes
         }
     }
 }

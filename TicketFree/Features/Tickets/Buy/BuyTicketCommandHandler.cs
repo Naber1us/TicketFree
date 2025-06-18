@@ -3,9 +3,6 @@ using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using TicketFree.Enums;
-using TicketFree.Features.Events.Dto;
-using TicketFree.Features.Places;
-using TicketFree.Features.Users.Create;
 using TicketFree.Interfaces;
 using TicketFree.Validations;
 
@@ -28,7 +25,7 @@ namespace TicketFree.Features.Tickets.Buy
                     return Result<Ticket>.Failure(
                         new Error("NOT_FOUND", "Событие не найдено"));
                 }
-                if(eventEntity.EventStatus == EStatus.Closed)
+                if (eventEntity.EventStatus == EStatus.Closed)
                 {
                     return Result<Ticket>.Failure(
                         new Error("EVENT_CLOSED", "Продажа билетов прекращена"));
@@ -36,7 +33,7 @@ namespace TicketFree.Features.Tickets.Buy
 
                 var userEntity = await dbContext.UsersInfo
                     .FirstOrDefaultAsync(u => u.UserId == request.UserId, cancellationToken);
-                
+
                 if (userEntity == null)
                 {
                     return Result<Ticket>.Failure(
@@ -51,7 +48,7 @@ namespace TicketFree.Features.Tickets.Buy
                 };
 
                 eventEntity.EventCountTickets--;
-                if(eventEntity.EventCountTickets == 0)
+                if (eventEntity.EventCountTickets == 0)
                 {
                     eventEntity.EventStatus = EStatus.Closed;
                 }

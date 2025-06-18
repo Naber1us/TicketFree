@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MediatR;
-using TicketFree.Features.Places.Dto;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using TicketFree.Features.Places.Create;
+using TicketFree.Features.Places.Dto;
 
 namespace TicketFree.Features.Places
 {

@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using TicketFree.Features.Users;
-using TicketFree.Features.Tickets;
-using TicketFree.Features.Places;
 using TicketFree.Features.Events;
+using TicketFree.Features.Places;
+using TicketFree.Features.Tickets;
+using TicketFree.Features.Users;
 using TicketFree.Interfaces;
 
 namespace TicketFree.Db

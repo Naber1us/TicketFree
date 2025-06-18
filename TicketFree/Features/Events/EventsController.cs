@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TicketFree.Features.Events.Create;
 using TicketFree.Features.Events.Dto;
+using TicketFree.Features.Events.Update;
 
 namespace TicketFree.Features.Events
 {
@@ -39,6 +40,13 @@ namespace TicketFree.Features.Events
         {
 
             var @event = await _mediator.Send(new CloseEventByIdQuery(id));
+            return @event != null ? Ok(@event) : NotFound();
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<Event>> UpdateEventById(UpdateEventByIdCommand command, Guid id)
+        {
+            var @event = await _mediator.Send(new UpdateEventByIdQuery(command, id));
             return @event != null ? Ok(@event) : NotFound();
         }
     }

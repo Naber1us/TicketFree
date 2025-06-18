@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using TicketFree.Features.Tickets.Dto;
 
 namespace TicketFree.Features.Tickets.Dto
 {

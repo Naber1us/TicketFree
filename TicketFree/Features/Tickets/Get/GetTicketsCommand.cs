@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using TicketFree.Features.Tickets.Dto;
 using Microsoft.EntityFrameworkCore;
+using TicketFree.Features.Tickets.Dto;
 using TicketFree.Interfaces;
 
 namespace TicketFree.Features.Tickets.Get
@@ -26,7 +26,7 @@ namespace TicketFree.Features.Tickets.Get
 
     public class GetTicketsByUserQueryHandler(IApplicationDbContext context) : IRequestHandler<GetTicketsByUserQuery, List<TicketDto>>
     {
-        private readonly IApplicationDbContext _context=context;
+        private readonly IApplicationDbContext _context = context;
 
         public async Task<List<TicketDto>> Handle(GetTicketsByUserQuery request, CancellationToken cancellationToken)
         {

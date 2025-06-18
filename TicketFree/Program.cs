@@ -1,4 +1,7 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using TicketFree.Db;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddUserSecrets<Program>();
 
 builder.Services.AddControllers();
+
 builder.Services
     .AddApplication()
     .AddInfrastructure(builder.Configuration);
@@ -20,6 +24,7 @@ builder.Services.AddSwaggerGen(o =>
         In = ParameterLocation.Header,
         Scheme = "Bearer"
     });
+
     o.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -35,14 +40,23 @@ builder.Services.AddSwaggerGen(o =>
                 In = ParameterLocation.Header
             },
             new List<string>()
-
         }
     });
 });
 
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(ServiceLifetime.Scoped);
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+    // Дополнительные настройки
+});
+
 var app = builder.Build();
-
-
 
 if (app.Environment.IsDevelopment())
 {
@@ -51,9 +65,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();

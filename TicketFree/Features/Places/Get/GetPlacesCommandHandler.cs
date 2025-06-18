@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using TicketFree.Features.Places.Dto;
 using Microsoft.EntityFrameworkCore;
+using TicketFree.Features.Places.Dto;
 using TicketFree.Interfaces;
 
 namespace TicketFree.Features.Places.Get

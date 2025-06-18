@@ -2,11 +2,10 @@
 using TicketFree.Enums;
 using TicketFree.Validations;
 
-namespace TicketFree.Features.Events.Dto
+namespace TicketFree.Features.Events.Update
 {
-    public record EventDto
+    public class UpdateEventByIdCommand: IRequest<Result<Event>>
     {
-        public Guid EventId { get; set; } = Guid.Empty;
         public Guid OrganizatorId { get; set; } = Guid.Empty;
         public Guid PlaceId { get; set; } = Guid.Empty;
         public Guid EventImage { get; set; } = Guid.Empty;
@@ -16,9 +15,6 @@ namespace TicketFree.Features.Events.Dto
         public string EventName { get; set; } = string.Empty;
         public string EventDescription { get; set; } = string.Empty;
         public EStatus EventStatus { get; set; } = EStatus.Open;
+        public Guid EventId { get; set; } = Guid.Empty;
     }
-
-    public record GetEventByIdQuery(Guid Id) : IRequest<EventDto?>;
-    public record GetActivesEventsQuery : IRequest<List<EventDto>>;
-    public record CloseEventByIdQuery(Guid Id) : IRequest<Result<EventDto>>;
 }

@@ -1,4 +1,9 @@
 ﻿using MediatR;
+<<<<<<< Updated upstream
+=======
+using TicketFree.Enums;
+using TicketFree.Validations;
+>>>>>>> Stashed changes
 
 namespace TicketFree.Features.Events.Create
 {
@@ -12,6 +17,6 @@ namespace TicketFree.Features.Events.Create
         public DateTime EventEnd { get; set; } = DateTime.Now.AddDays(1);
         public string EventName { get; set; } = string.Empty;
         public string EventDescription { get; set; } = string.Empty;
-        public string EventStatus { get; set; } = string.Empty;
+        public EStatus EventStatus { get; set; } = EStatus.Open;
     }
 }

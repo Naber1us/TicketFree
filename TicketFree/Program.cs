@@ -1,5 +1,12 @@
 using Microsoft.OpenApi.Models;
 using TicketFree.Db;
+<<<<<<< Updated upstream
+=======
+using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics;
+using FluentValidation.AspNetCore;
+using System.Reflection;
+>>>>>>> Stashed changes
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +47,25 @@ builder.Services.AddSwaggerGen(o =>
     });
 });
 
+<<<<<<< Updated upstream
+=======
+builder.Services.AddValidatorsFromAssemblyContaining<Program>(); // Или укажите конкретный валидатор
+
+// 2. Настройка автоматической валидации
+builder.Services.AddFluentValidationAutoValidation(config =>
+{
+    config.DisableDataAnnotationsValidation = true; // Отключаем стандартную валидацию DataAnnotations
+});
+
+// 3. Клиентская валидация (если нужно)
+builder.Services.AddFluentValidationClientsideAdapters();
+
+// Стандартная конфигурация MVC
+builder.Services.AddControllers();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+
+>>>>>>> Stashed changes
 var app = builder.Build();
 
 

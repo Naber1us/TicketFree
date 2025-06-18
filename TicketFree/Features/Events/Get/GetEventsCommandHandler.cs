@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using TicketFree.Enums;
 using TicketFree.Features.Events.Dto;
 using TicketFree.Interfaces;
 
@@ -37,7 +38,7 @@ namespace TicketFree.Features.Events.Get
         public async Task<List<EventDto>> Handle(GetActivesEventsQuery request, CancellationToken cancellationToken)
         {
             return await _context.EventsInfo
-                .Where(e => e.EventStatus == "Open")
+                .Where(e => e.EventStatus == EStatus.Open)
                 .Select(e => new EventDto
                 {
                     EventId = e.EventId,

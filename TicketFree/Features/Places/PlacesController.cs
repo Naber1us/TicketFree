@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TicketFree.Features.Places.Create;
 using TicketFree.Features.Places.Dto;
-using TicketFree.Features.Places.Create;
-using TicketFree.Validations;
 
 namespace TicketFree.Features.Places
 {

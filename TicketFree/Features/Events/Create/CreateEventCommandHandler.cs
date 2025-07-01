@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-using TicketFree.Features.Places;
 using TicketFree.Interfaces;
 using TicketFree.Validations;
 
@@ -28,14 +27,14 @@ namespace TicketFree.Features.Events.Create
                         new Error("NOT_FOUND", "Указанное место не найдено"));
                 }
 
-                if ((place.PlaceCountMembers <= request.EventCountTickets))
+                if (place.PlaceCountMembers <= request.EventCountTickets)
                 {
                     return Result<Event>.Failure(
                         new Error("CAPACITY_EXCEEDED",
                             $"Количество билетов ({request.EventCountTickets}) " +
                             $"превышает вместимость помещения ({place.PlaceCountMembers})"));
                 }
-                
+
                 var organizerExists = await dbContext.UsersInfo
                     .AnyAsync(u => u.UserId == request.OrganizatorId, cancellationToken);
 
@@ -44,7 +43,6 @@ namespace TicketFree.Features.Events.Create
                     return Result<Event>.Failure(
                         new Error("NOT_FOUND", "Указанный организатор не найден"));
                 }
-                
 
                 var @event = new Event
                 {

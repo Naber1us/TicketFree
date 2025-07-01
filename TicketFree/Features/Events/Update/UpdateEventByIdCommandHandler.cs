@@ -39,7 +39,7 @@ namespace TicketFree.Features.Events.Update
                 }
 
                 if (request.Body.EventEnd != null && eventEntity.EventEnd != request.Body.EventEnd)
-                    {
+                {
                     if (eventEntity.EventStart < request.Body.EventEnd)
                         eventEntity.EventEnd = (DateTime)request.Body.EventEnd;
                     else

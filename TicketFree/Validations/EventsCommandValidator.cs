@@ -1,7 +1,5 @@
 ﻿using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using TicketFree.Features.Events.Create;
-using TicketFree.Interfaces;
 
 namespace TicketFree.Validations
 {
@@ -20,7 +18,6 @@ namespace TicketFree.Validations
                 .NotEmpty().WithMessage("'{PropertyName}' обязательное поле")
                 .GreaterThan(0).WithMessage("Количество мест должно быть больше 0")
                 .WithName("PlaceName");
-
         }
     }
 }

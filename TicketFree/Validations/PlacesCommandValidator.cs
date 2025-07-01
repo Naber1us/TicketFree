@@ -5,7 +5,6 @@ namespace TicketFree.Validations
 {
     public class CreatePlacesCommandValidator : AbstractValidator<CreatePlaceCommand>
     {
-
         public CreatePlacesCommandValidator()
         {
             RuleFor(x => x.PlaceHolder)
@@ -21,7 +20,6 @@ namespace TicketFree.Validations
                 .NotEmpty().WithMessage("'{PropertyName}' обязательное поле")
                 .MaximumLength(50).WithMessage("Длинное название. Нужно указать до 50 символов")
                 .WithName("PlaceName");
-
         }
     }
 }

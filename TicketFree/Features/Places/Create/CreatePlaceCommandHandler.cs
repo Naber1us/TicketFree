@@ -31,17 +31,16 @@ namespace TicketFree.Features.Places.Create
             }
             catch (DbUpdateException ex) when (ex.InnerException is SqlException sqlEx)
             {
-                if(sqlEx.Message.Contains("FK__PlacesInf__Place__07E124C1"))
+                if (sqlEx.Message.Contains("FK__PlacesInf__Place__07E124C1"))
                 {
                     return Result<Place>.Failure(
-                    new Error("DATABASE_ERROR", $"В PlaceHolder указан несуществующий пользователь"));
+                    new Error("DATABASE_ERROR", "В PlaceHolder указан несуществующий пользователь"));
                 }
                 else
                 {
                     return Result<Place>.Failure(
                     new Error("DATABASE_ERROR", $"Ошибка базы данных: {sqlEx.Message}"));
                 }
-                
             }
             catch (Exception ex)
             {

@@ -61,15 +61,12 @@ namespace TicketFree.Features.Tickets.Buy
             {
                 return Result<Ticket>.Failure(
                     new Error("DATABASE_ERROR", $"Ошибка базы данных: {sqlEx.Message}"));
-
             }
             catch (Exception ex)
             {
                 return Result<Ticket>.Failure(
                     new Error("UNEXPECTED_ERROR", $"Неожиданная ошибка: {ex.Message}"));
             }
-
         }
     }
-
 }

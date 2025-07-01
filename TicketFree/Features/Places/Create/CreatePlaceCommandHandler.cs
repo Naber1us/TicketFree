@@ -19,7 +19,6 @@ namespace TicketFree.Features.Places.Create
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return place;
-
         }
     }
 }

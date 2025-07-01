@@ -41,5 +41,4 @@ namespace TicketFree.Features.Users.Get
                 .ToListAsync(cancellationToken);
         }
     }
-
 }

@@ -17,7 +17,6 @@ namespace TicketFree.Features.Events.Delete
         {
             var eventEntity = await _context.EventsInfo
                                         .FirstOrDefaultAsync(e => e.EventId == request.Id, cancellationToken);
-
             if (eventEntity == null)
             {
                 return Result<EventDto>.Failure(
@@ -29,9 +28,7 @@ namespace TicketFree.Features.Events.Delete
                 return Result<EventDto>.Failure(
                     new Error("INVALID_OPERATION", "Событие уже закрыто"));
             }
-
             eventEntity.EventStatus = EStatus.Closed;
-
             try
             {
                 await _context.SaveChangesAsync(cancellationToken);

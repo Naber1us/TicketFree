@@ -38,7 +38,6 @@ namespace TicketFree.Features.Events
         [HttpDelete("{id}")]
         public async Task<ActionResult<Event>> DeleteEventById(Guid id)
         {
-
             var @event = await _mediator.Send(new CloseEventByIdQuery(id));
             return @event != null ? Ok(@event) : NotFound();
         }

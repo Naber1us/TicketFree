@@ -1,6 +1,4 @@
 ﻿namespace TicketFree
 {
-    public class Application
-    {
-    }
+    public class Application;
 }

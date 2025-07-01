@@ -19,8 +19,6 @@ namespace TicketFree.Features.Users.Create
             await dbContext.SaveChangesAsync(cancellationToken);
 
             return user;
-
         }
     }
-
 }

@@ -8,5 +8,4 @@ namespace TicketFree.Features.Users.Create
         public string UserName { get; set; } = string.Empty;
         public ERoles UserRole { get; set; } = ERoles.Guest;
     }
-
 }

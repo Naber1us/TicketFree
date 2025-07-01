@@ -12,5 +12,4 @@ namespace TicketFree.Features.Users.Dto
 
     public record GetUserByIdQuery(Guid Id) : IRequest<UserDto?>;
     public record GetAllUsersQuery : IRequest<List<UserDto>>;
-
 }

@@ -8,6 +8,5 @@ namespace TicketFree.Features.Users
         public string? UserName { get; set; }
         public ERoles UserRole { get; set; }
         public Guid UserToken { get; set; }
-
     }
 }

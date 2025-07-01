@@ -21,22 +21,30 @@ namespace TicketFree.Features.Events.Update
                 var eventEntity = await dbContext.EventsInfo
                     .FirstOrDefaultAsync(e => e.EventId == request.Id, cancellationToken);
                 if (eventEntity == null)
+                {
                     return Result<Event>.Failure(
                         new Error("NOT_FOUND", "Событие не найдено"));
+                }
 
                 if (request.Body.EventStart != null && eventEntity.EventStart != request.Body.EventStart)
+                {
                     if (request.Body.EventStart < eventEntity.EventEnd)
+                    {
                         eventEntity.EventStart = (DateTime)request.Body.EventStart;
+                    }
                     else
-                        return Result<Event>.Failure(
-                            new Error("INVALID_DATES", "Дата начала должна быть раньше даты окончания"));
+                    {
+                        return Result<Event>.Failure(new Error("INVALID_DATES", "Дата начала должна быть раньше даты окончания"));
+                    }
+                }
 
                 if (request.Body.EventEnd != null && eventEntity.EventEnd != request.Body.EventEnd)
+                    {
                     if (eventEntity.EventStart < request.Body.EventEnd)
                         eventEntity.EventEnd = (DateTime)request.Body.EventEnd;
                     else
-                        return Result<Event>.Failure(
-                            new Error("INVALID_DATES", "Дата начала должна быть раньше даты окончания"));
+                        return Result<Event>.Failure(new Error("INVALID_DATES", "Дата начала должна быть раньше даты окончания"));
+                }
 
                 if (request.Body.EventName != null && eventEntity.EventName != request.Body.EventName)
                     eventEntity.EventName = request.Body.EventName;
@@ -61,7 +69,7 @@ namespace TicketFree.Features.Events.Update
                     if (place.PlaceCountMembers <= eventEntity.EventCountTickets)
                     {
                         return Result<Event>.Failure(
-                        new Error("CAPACITY_EXCEEDED", $"В выбранном помещеннии недостаточно мест"));
+                        new Error("CAPACITY_EXCEEDED", "В выбранном помещеннии недостаточно мест"));
                     }
 
                     eventEntity.PlaceId = (Guid)request.Body.PlaceId;
@@ -80,7 +88,7 @@ namespace TicketFree.Features.Events.Update
                     if (place.PlaceCountMembers <= request.Body.EventCountTickets)
                     {
                         return Result<Event>.Failure(
-                        new Error("CAPACITY_EXCEEDED", $"В выбранном помещеннии недостаточно мест"));
+                        new Error("CAPACITY_EXCEEDED", "В выбранном помещеннии недостаточно мест"));
                     }
 
                     eventEntity.EventCountTickets = (int)request.Body.EventCountTickets;
@@ -88,7 +96,7 @@ namespace TicketFree.Features.Events.Update
                 if (request.Body.OrganizatorId != null && eventEntity.OrganizatorId != request.Body.OrganizatorId)
                 {
                     var organizerExists = await dbContext.UsersInfo
-                    .AnyAsync(u => u.UserId == request.Body  .OrganizatorId, cancellationToken);
+                    .AnyAsync(u => u.UserId == request.Body.OrganizatorId, cancellationToken);
 
                     if (!organizerExists)
                     {

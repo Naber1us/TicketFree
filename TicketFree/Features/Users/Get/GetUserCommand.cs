@@ -9,5 +9,4 @@ namespace TicketFree.Features.Users.Get
         public ERoles UserRole { get; } = ERoles.Guest;
         public Guid UserId { get; } = Guid.Empty;
     }
-
 }

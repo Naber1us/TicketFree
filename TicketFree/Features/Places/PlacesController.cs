@@ -35,7 +35,6 @@ namespace TicketFree.Features.Places
                 return Ok(result.Value);
 
             return BadRequest(result.Error);
-
         }
     }
 }

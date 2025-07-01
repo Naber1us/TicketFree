@@ -15,7 +15,6 @@ namespace TicketFree.Features.Events.Delete
 
         public async Task<Result<EventDto>> Handle(CloseEventByIdQuery request, CancellationToken cancellationToken)
         {
-
             var eventEntity = await _context.EventsInfo
                                         .FirstOrDefaultAsync(e => e.EventId == request.Id, cancellationToken);
 
